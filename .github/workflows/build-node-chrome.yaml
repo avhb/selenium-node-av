@@ -49,5 +49,5 @@ jobs:
           file: ./build/dockerfile-chrome
           build-args: UPSTREAM_VERSION=${{ steps.get-upstream-version.outputs.version }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }} , ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get-upstream-version.outputs.version }} # will generate one master tag and one upstream-version tag
           labels: ${{ steps.meta.outputs.labels }}
