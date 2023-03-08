@@ -15,9 +15,16 @@ todo
 - Need:
   - ffmpeg
   - docker
-- build:         `docker build --file dockerfile-chrome --tag ghcr.io/avhb/node-chrome-av:110.0-dev`
+- build:
+  ```
+  cd build && docker build \
+  --file dockerfile-chrome  \
+  --tag ghcr.io/avhb/node-chrome-av:$(cat node-chrome-upstream) \
+  --build-arg UPSTREAM_VERSION=$(cat node-chrome-upstream) \
+  .
+  ```
 - login to ghcr: `docker login ghcr.io -u {{username}} --password {{token}}`
-- publish:       `docker push ghcr.io/avhb/node-chrome-av:110.0-dev`
+- publish:       `docker push ghcr.io/avhb/node-chrome-av:$(cat node-chrome-upstream)`
 
 ## [INFO] Manually use the command line flags for fake audio streams
 
