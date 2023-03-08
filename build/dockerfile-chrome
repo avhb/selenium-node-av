@@ -1,4 +1,8 @@
-FROM selenium/node-chrome:110.0
+ARG UPSTREAM_VERSION
+
+FROM selenium/node-chrome:$UPSTREAM_VERSION
+# label is needed for linking to the repo when not running using gha
+LABEL org.opencontainers.image.source=https://github.com/avhb/selenium-node-av
 
 # media must be within the build folder!
 ADD media /home/seluser/media
