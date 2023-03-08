@@ -85,7 +85,3 @@ using this video as a source as it has audio as well: https://www.larmoire.info/
    ```
    ffmpeg -f lavfi -i "sine=frequency=1000:duration=5" sinewave-1000hz.wav
    ```
-3. wav text to speech (mono)
-   ```
-   ffmpeg -f lavfi -i flite=text='This is test audio' tts-thisistestaudio.wav
-   ```
