@@ -1,0 +1,23 @@
+name: Build node-chrome
+
+on: workflow_dispatch
+
+jobs:
+  
+
+  build-node-chrome:
+    runs-on: ubuntu-22.04
+    name: Build
+    env:
+      DOCKER_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - run: |
+          DOCKER_FULL_NAME="$ARTIFACTORY_DEV/$DOCKER_REPO/$DOCKER_NAME:$DOCKER_TAG"
+          docker build \
+            --build-arg BLUE_VERSION="$DOCKER_TAG" \
+            --build-arg BLUE_TIMESTAMP="$(TZ=UTC date +%Y%m%d%H%M)" \
+            --build-arg BLUE_BRANCH="$GITHUB_REF_NAME" \
+            --build-arg BLUE_COMMIT="$DOCKER_TAG" \
+            --tag $DOCKER_FULL_NAME \
+            -f e2e/docker/Dockerfile .
+            docker push $DOCKER_FULL_NAME

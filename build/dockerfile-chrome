@@ -1,0 +1,4 @@
+FROM selenium/node-chrome:110.0
+
+# av-files must be withing the build folder
+ADD av-files /home/seluser/av-files
