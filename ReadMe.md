@@ -1,8 +1,10 @@
 # Selenium Node AV (Audio/Video)
 
-This repo generates docker images for Selenium Grid nodes that have motre  
+This repo generates docker images for Selenium Grid nodes.
 
-todo: all clips are 5s long in order to reduce images size
+## Usage
+
+`docker pull ghcr.io/avhb/node-chrome-av:master`
 
 ## Integration example
 
@@ -42,13 +44,15 @@ chromium \
     https://webrtc.github.io/test-pages/
 ```
 
+https://user-images.githubusercontent.com/66175168/223806514-355ec44c-4496-446f-9e54-cba0937b4ceb.mp4
+
 ### Custom fake webcam + audio
 
 Once the video is at it's end, it will restart automatically
 
 1. custom fake webcam
    - ".mjpeg" or ".y4m" file, y4m is difficult to generate (requires sed-command) and uncompressed, so it is very space-inefficient, just look at the difference
-   - TODO add comparison picture here
+   - ![file-size-comparison](https://user-images.githubusercontent.com/66175168/223806353-410f0c10-93c5-4f51-bbe7-1c932d371ac6.png)
    - ".y4m" still works as expected though
 2. custom fake audio
    - ".wav" file
@@ -61,6 +65,8 @@ chromium \
     --use-file-for-fake-audio-capture=jelly.wav \
     https://webrtc.github.io/test-pages/
 ```
+
+https://user-images.githubusercontent.com/66175168/223806593-ea182182-11a8-47bb-8b46-1d343eb17c5a.mp4
 
 ## [INFO] Generating mjpeg, y4m and wav files manually
 
