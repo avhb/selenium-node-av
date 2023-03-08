@@ -2,22 +2,47 @@ name: Build node-chrome
 
 on: workflow_dispatch
 
-jobs:
-  
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: avhb/node-chrome-av # ${{ github.repository }}
 
+jobs:
   build-node-chrome:
     runs-on: ubuntu-22.04
-    name: Build
-    env:
-      DOCKER_TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+    name: Build and Push to ghcr.io
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - run: |
-          DOCKER_FULL_NAME="$ARTIFACTORY_DEV/$DOCKER_REPO/$DOCKER_NAME:$DOCKER_TAG"
-          docker build \
-            --build-arg BLUE_VERSION="$DOCKER_TAG" \
-            --build-arg BLUE_TIMESTAMP="$(TZ=UTC date +%Y%m%d%H%M)" \
-            --build-arg BLUE_BRANCH="$GITHUB_REF_NAME" \
-            --build-arg BLUE_COMMIT="$DOCKER_TAG" \
-            --tag $DOCKER_FULL_NAME \
-            -f e2e/docker/Dockerfile .
-            docker push $DOCKER_FULL_NAME
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: set up ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v2
+        id: setup-ffmpeg
+
+      - name: Generate media files
+        run: ./generate-media-files.sh
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4.3.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} 
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: ./build
+          file: ./build/dockerfile-chrome
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
